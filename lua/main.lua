@@ -5,21 +5,12 @@ function list_methods(obj)
     print("----               ----")
 end
 
--- NOTE: these two are no longer working. i broke them somehow.
--- i do not know why. not sure if its everything that takes arguments or
--- just these?
--- (i think only one of these was called anyways though so it might just be
--- a single function that is broken for some reason, dont think i changed anything
--- that would make it specifically this function though?)
 hook_objc("BHServer", "initWithDelegate:match:netNodeType:saveID:maxPlayers:", function(self, _cmd, delegate, match, netNodeType, saveID, maxPlayers)
     print("BHServer INIT")
-    abort()
     print(delegate, match, netNodeType, saveID, maxPlayers)
-    print(delegate:className())
 end)
 hook_objc("BHNetNode", "initWithDelegate:match:netNodeType:", function(self, _cmd, delegate, match, netNodeType)
     print("BHNetNode INIT")
-    abort()
     print(delegate, match, netNodeType)
     return nil
 end)
