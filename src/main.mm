@@ -3,14 +3,16 @@
 #include <mutex>
 #include <map>
 #include <string>
+#include <dlfcn.h>
 
-#include "macros/symbol_loader.hpp"
 #include <Foundation/Foundation.h>
 
-#define LOG_ALL_NONINTERNAL_METHOD_CALLS false
+#import "cpp_hooks.h"
+#import "hook_util.h"
+#import "macros/symbol_loader.hpp"
+#import "lua/lua_runner.h"
 
 extern "C" IMP objc_msg_lookup(id obj, SEL sel);
-
 DEFINE_OVERRIDE_SYM(objc_msg_lookup);
 
 std::map<std::string, IMP>* original_implementations;
@@ -23,6 +25,8 @@ void initSymbols() {
     original_implementations = new std::map<std::string, IMP>();
 }
 
+
+#define LOG_ALL_NONINTERNAL_METHOD_CALLS false
 // we do not use Objective-C methods in here because they will make objc_msg_lookup very very mad and
 // result in race conditions and occasional infinite recursions and segfaults. fml
 
@@ -56,3 +60,58 @@ extern "C" IMP objc_msg_lookup(id obj, SEL sel) {
     IMP returnImp = r_objc_msg_lookup(obj, sel);
     return returnImp;
 }
+
+// _NOTE_
+// here is where we intercept __libc_start_main which is like uhhhhhhhh
+//
+//
+//
+// it does things and then something something main()
+
+typedef int (*main_fn)(int, char **, char **);
+typedef int (*libc_start_main_fn)(main_fn, int, char **,
+                                  void (*)(void), void (*)(void),
+                                  void (*)(void), void *);
+
+static main_fn real_main = NULL;
+
+static int my_main(int argc, char **argv, char **envp) {
+    isFoundationReady = YES;
+
+    // i think have to do this. it gives warnings if u dont have an autorelease pool.
+    // (what i mean is that like idk if this is the best wya to do this)
+    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+
+    runLua();
+
+    [pool drain];
+
+    // we will hijack this function that doesn't even do anything.
+    // it passes GameController, so it gives us a free reference to give to lua, which contains
+    // a ton of stuff that we can use from there.
+    //
+    // this is so incredibly convenient lmao
+    HOOK_METHOD(CommandLineDelegate, loadCompleteForGameController:, hooked_loadCompleteForGameController);
+    
+    return real_main(argc, argv, envp);
+}
+
+extern "C" int __libc_start_main(main_fn main,
+    int argc, char **ubp_av,
+    void (*init)(void),
+    void (*fini)(void),
+    void (*rtld_fini)(void),
+    void *stack_end
+) {
+    static libc_start_main_fn real_libc_start_main = NULL;
+    if (!real_libc_start_main) {
+        real_libc_start_main = (libc_start_main_fn)dlsym(RTLD_NEXT, "__libc_start_main");
+        if (!real_libc_start_main) {
+            NSLog(@"failed to find __libc_start_main");
+            exit(1);
+        }
+    }
+
+    real_main = main;
+    return real_libc_start_main(my_main, argc, ubp_av, init, fini, rtld_fini, stack_end);
+};
