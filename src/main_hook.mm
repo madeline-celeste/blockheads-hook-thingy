@@ -16,9 +16,6 @@
 
 #import <Foundation/Foundation.h>
 
-
-extern id RefGameController;
-
 static main_fn real_main = NULL;
 
 void init_hook_state() {
