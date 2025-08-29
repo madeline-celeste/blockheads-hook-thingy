@@ -36,6 +36,7 @@ $ cowsay "god help you"
 ## Lua API
 - objc objects are turned into an `ObjcObject`
     - with some exceptions, like `NSString`s and `NSArray`s
+    - calls to `ObjcObject`s work through magic. kind of. barely.
 - objc selectors are turned into an `ObjcSelector`
 
 ## Notes
