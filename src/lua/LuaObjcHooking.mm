@@ -159,9 +159,17 @@ void objc_ffi_lua_invoke(ffi_cif *cif, void *ret, void **args, void *user_data) 
                 if (luaL_testudata(L, -1, "ObjCObject")) {
                     id obj = *static_cast<id*>(luaL_testudata(L, -1, "ObjCObject"));
                     *static_cast<void**>(ret) = obj;
-                } else if (luaL_testudata(L, -1, "ObjCSelector")) {
-                    SEL sel = static_cast<SEL*>(luaL_testudata(L, -1, "ObjCSelector"));
-                    *static_cast<void**>(ret) = sel;
+                } else if (luaL_testudata(L, -1, "ObjCSelector")) { // untested
+                    // this might not be portable i think (from my basic understandings at least)
+                    // some platforms define objc_selector as const while others
+                    // don't is what it seems
+                    // idk if there will be any issues in the case that it isnt const though
+                    // pointers are hard and evil
+
+                    // i guess it's probably fine if we're casting to const and then
+                    // unconsting it(..?)
+                    SEL sel = *static_cast<SEL*>(luaL_testudata(L, -1, "ObjCSelector"));
+                    *static_cast<void**>(ret) = const_cast<void*>(reinterpret_cast<const void*>(sel));
                 } else {
                     @throw [
                         NSException exceptionWithName:@"UnhandledUData"
