@@ -55,6 +55,48 @@ static int ObjCDebug_getClassList(lua_State* L) {
     return 1;
 }
 
+// this does not seem to work, i think.
+// couldn't tell you why i have barely any knowledge of objc
+static int ObjCDebug_getPropertiesForClass(lua_State* L) {
+    const char* class_name = luaL_checkstring(L, 1);
+    Class cls = objc_getClass(class_name);
+
+    if (!cls) {
+        luaL_error(L, "Class '%s' not found", class_name);
+        return 2;
+    }
+
+    unsigned int property_count = 0;
+    objc_property_t* props = class_copyPropertyList(cls, &property_count);
+
+    lua_createtable(L, property_count, 0);
+
+    NSLog(@"%u", property_count);
+
+    for (unsigned i = 0; i < property_count; i++) {
+        const char* name = property_getName(props[i]);
+        const char* attrs = property_getAttributes(props[i]);
+
+        lua_pushnumber(L, i + 1); // add index to stack
+
+        {
+            lua_createtable(L, 0, 2); // add propTable to stack
+
+            lua_pushstring(L, name ? name : "(null)"); // add name to stack
+            lua_setfield(L, -2, "name"); // set field then pop
+
+            lua_pushstring(L, attrs ? attrs : "?"); // add attribute to stack
+            lua_setfield(L, -2, "attributes"); // set field and pop
+        }
+
+        lua_settable(L, -3); // sets and pops outer table
+    }
+
+    free(props);
+
+    return 1;
+}
+
 int pushObjCDebug(lua_State* L) {
     lua_newuserdata(L, 0);
 
@@ -72,6 +114,8 @@ void registerObjCDebug(lua_State*L) {
     lua_setfield(L, -2, "DumpIvarsForClass");
     lua_pushcfunction(L, ObjCDebug_getClassList);
     lua_setfield(L, -2, "getClassList");
+    lua_pushcfunction(L, ObjCDebug_getPropertiesForClass);
+    lua_setfield(L, -2, "getPropertiesForClass");
 
     lua_pushvalue(L, -1);
     lua_setfield(L, -2, "__index");
