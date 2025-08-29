@@ -151,17 +151,17 @@ void objc_ffi_lua_invoke(ffi_cif *cif, void *ret, void **args, void *user_data) 
             NSLog(@"point");
             if (lua_islightuserdata(L, -1)) {
                 void* obj = lua_touserdata(L, -1);
-                *(void**)ret = obj;
+                *static_cast<void**>(ret) = obj;
             } else if (lua_isstring(L, -1)) {
                 NSString* str = [NSString stringWithUTF8String:lua_tostring(L, -1)];
-                *(void**)ret = str;
+                *static_cast<void**>(ret) = str;
             } else if (lua_isuserdata(L, -1)) { // TODO: untested
                 if (luaL_testudata(L, -1, "ObjCObject")) {
-                    id obj = *(id*)luaL_testudata(L, -1, "ObjCObject");
-                    *(void**)ret = obj;
+                    id obj = *static_cast<id*>(luaL_testudata(L, -1, "ObjCObject"));
+                    *static_cast<void**>(ret) = obj;
                 } else if (luaL_testudata(L, -1, "ObjCSelector")) {
-                    SEL sel = *(SEL*)luaL_testudata(L, -1, "ObjCSelector");
-                    *(void**)ret = sel;
+                    SEL sel = static_cast<SEL*>(luaL_testudata(L, -1, "ObjCSelector"));
+                    *static_cast<void**>(ret) = sel;
                 } else {
                     @throw [
                         NSException exceptionWithName:@"UnhandledUData"
@@ -170,31 +170,31 @@ void objc_ffi_lua_invoke(ffi_cif *cif, void *ret, void **args, void *user_data) 
                     ];
                 }
             } else {
-                *(void**)ret = nil;
+                *static_cast<void**>(ret) = nil;
             }
             break;
         }
         case FFI_TYPE_UINT8: {
             if (lua_isboolean(L, -1)) {
-                *(uint8_t*)ret = (uint8_t)lua_toboolean(L, -1);
+                *static_cast<uint8_t*>(ret) = static_cast<uint8_t>(lua_toboolean(L, -1));
             } else {
-                *(uint8_t*)ret = (uint8_t)lua_tonumber(L, -1);
+                *static_cast<uint8_t*>(ret) = static_cast<uint8_t>(lua_tonumber(L, -1));
             }
             break;
         }
         case FFI_TYPE_SINT32: {
             NSLog(@"sint32!!");
-            *(uint32_t*)ret = (uint32_t)lua_tointeger(L, -1);
+            *static_cast<uint32_t*>(ret) = static_cast<uint32_t>(lua_tointeger(L, -1));
             break;
         }
         case FFI_TYPE_DOUBLE: {
             NSLog(@"doub!!");
-            *(double*)ret = (double)lua_tonumber(L, -1);
+            *static_cast<double*>(ret) = static_cast<double>(lua_tonumber(L, -1));
             break;
         }
         case FFI_TYPE_FLOAT: {
             NSLog(@"float!!");
-            *(float*)ret = (double)lua_tonumber(L, -1);
+            *static_cast<float*>(ret) = static_cast<double>(lua_tonumber(L, -1));
             break;
         }
         case FFI_TYPE_VOID: {
@@ -263,7 +263,7 @@ int lua_hook_objc(lua_State* L) {
     ffi_closure* closure;
     IMP imp;
 
-    closure = (ffi_closure*)ffi_closure_alloc(sizeof(ffi_closure), (void**)&imp);
+    closure = (ffi_closure*)ffi_closure_alloc(sizeof(ffi_closure), reinterpret_cast<void**>(&imp));
 
     hook->L = L;
     hook->luaFuncRef = funcRef;
