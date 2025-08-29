@@ -8,6 +8,7 @@
 #include <string>
 
 #import "ObjCPushHelper.h"
+#import "classes/ObjCSelector.h"
 #import "classes/ObjCObject.h"
 
 #import <Foundation/Foundation.h>
@@ -70,7 +71,7 @@ void objc_ffi_lua_invoke(ffi_cif *cif, void *ret, void **args, void *user_data) 
     lua_rawgeti(L, LUA_REGISTRYINDEX, hook->luaFuncRef);
 
     pushObjCObject(L, self);
-    lua_pushlightuserdata(L, (void*)_cmd);
+    pushObjCSelector(L, _cmd);
 
     // start past self and _cmd
     for (NSUInteger i = 2; i < numArgs; i++) {
