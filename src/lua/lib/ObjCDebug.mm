@@ -44,6 +44,8 @@ int pushObjCDebug(lua_State* L) {
 
     luaL_getmetatable(L, "ObjCDebug");
     lua_setmetatable(L, -2);
+
+    return 1;
 }
 void registerObjCDebug(lua_State*L) {
     luaL_newmetatable(L, "ObjCDebug");
