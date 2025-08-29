@@ -155,6 +155,17 @@ void objc_ffi_lua_invoke(ffi_cif *cif, void *ret, void **args, void *user_data) 
             } else if (lua_isstring(L, -1)) {
                 NSString* str = [NSString stringWithUTF8String:lua_tostring(L, -1)];
                 *(void**)ret = str;
+            } else if (lua_isuserdata(L, -1)) { // TODO: untested
+                if (luaL_testudata(L, -1, "ObjCObject")) {
+                    id obj = *(id*)luaL_testudata(L, -1, "ObjCObject");
+                    *(void**)ret = obj;
+                } else {
+                    @throw [
+                        NSException exceptionWithName:@"UnhandledUData"
+                        reason:@"unhandled userdata returned from lua hooked function"
+                        userInfo:NULL
+                    ];
+                }
             } else {
                 *(void**)ret = nil;
             }
