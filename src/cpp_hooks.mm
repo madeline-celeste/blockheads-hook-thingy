@@ -1,7 +1,7 @@
 #import "hook_util.h"
-#import "lua/GameController.h"
+#import "lua/classes/GameController.h"
 #import "lua/lua_runner.h"
-#import "lua/ObjCObject.h"
+#import "lua/classes/ObjCObject.h"
 #import "cpp_hooks.h"
 
 #import <Foundation/Foundation.h>

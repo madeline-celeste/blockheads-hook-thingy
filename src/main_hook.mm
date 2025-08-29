@@ -12,7 +12,6 @@
 #import "main_hook.h"
 #import "hook_util.h"
 #import "cpp_hooks.h"
-#import "lua/GameController.h"
 #import "lua/lua_runner.h"
 
 #import <Foundation/Foundation.h>
