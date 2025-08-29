@@ -55,5 +55,8 @@ void registerObjCDebug(lua_State*L) {
     lua_pushcfunction(L, DumpIvarsForClass);
     lua_setfield(L, -2, "DumpIvarsForClass");
 
+    lua_pushvalue(L, -1);
+    lua_setfield(L, -2, "__index");
+
     lua_pop(L, 1);
 }
