@@ -38,7 +38,8 @@ void hookMethod(Class cls, SEL sel, IMP newImp) {
     }
     hooks.insert(full_name);
 
-    method_setImplementation(m, newImp);
+    const char* encoding = method_getTypeEncoding(m);
+    class_replaceMethod(cls, sel, newImp, encoding);
 }
 
 void hookMethod(std::string class_name, SEL sel, IMP newImp) {

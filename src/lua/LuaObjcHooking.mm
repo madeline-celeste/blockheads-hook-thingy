@@ -46,6 +46,7 @@ struct LuaHook {
     ffi_cif call_interface;
     ffi_closure* closure;
     ffi_type* return_type;
+    IMP previous_implementation;
 };
 static std::map<std::string, LuaHook> lua_hooks;
 
@@ -238,10 +239,7 @@ int lua_hook_objc(lua_State* L) {
         return 0;
     }
 
-    // apparently expensive with gnustep runtime and should
-    // use class_replacemethod instead (according to doc).
-    // idc tho right now im lazy lmao
-    method_setImplementation(meth, imp);
+    hook->previous_implementation = class_replaceMethod(cls, sel, imp, encoding);
 
     NSLog(@"[Hooked %s]", full_name.c_str());
 
