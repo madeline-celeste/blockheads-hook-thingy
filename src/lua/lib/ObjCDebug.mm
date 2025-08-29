@@ -1,4 +1,6 @@
+#include <cstddef>
 #import <lua.hpp>
+#include <objc/objc.h>
 #import <Foundation/Foundation.h>
 
 // TODO: make fully lua interactable i think thatm akes sense
@@ -38,6 +40,20 @@ static int ObjCDebug_getClassHierarchy(lua_State* L) {
 
     return 1;
 }
+static int ObjCDebug_getClassList(lua_State* L) {
+    int numClasses = objc_getClassList(NULL, 0);
+    Class* classes = static_cast<Class*>(malloc(sizeof(Class) * numClasses));
+    objc_getClassList(classes, numClasses);
+
+    lua_createtable(L, 0, numClasses);
+    for (int i = 0; i < numClasses; i++) {
+        lua_pushnumber(L, static_cast<lua_Number>(i + 1));
+        lua_pushstring(L, class_getName(classes[i]));
+        lua_settable(L, -3);
+    }
+
+    return 1;
+}
 
 int pushObjCDebug(lua_State* L) {
     lua_newuserdata(L, 0);
@@ -54,6 +70,8 @@ void registerObjCDebug(lua_State*L) {
     lua_setfield(L, -2, "getClassHierarchy");
     lua_pushcfunction(L, DumpIvarsForClass);
     lua_setfield(L, -2, "DumpIvarsForClass");
+    lua_pushcfunction(L, ObjCDebug_getClassList);
+    lua_setfield(L, -2, "getClassList");
 
     lua_pushvalue(L, -1);
     lua_setfield(L, -2, "__index");
