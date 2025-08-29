@@ -174,17 +174,14 @@ int lua_hook_objc(lua_State* L) {
 
     Class cls = objc_getClass(class_name);
     if (!cls) {
-        lua_pushstring(L, "Class not found.");
-        lua_error(L);
+        luaL_error(L, "Class not found.");
         return 0;
     }
 
     SEL sel = sel_registerName(sel_name);
     Method meth = class_getInstanceMethod(cls, sel);
     if (!meth) {
-        NSLog(@"%s", sel_name);
-        lua_pushstring(L, "Method not found.");
-        lua_error(L);
+        luaL_error(L, "Method '%s' not found.");
         return 0;
     }
 
@@ -214,8 +211,7 @@ int lua_hook_objc(lua_State* L) {
         return_type,
         hook->arg_types.data()
     ) != FFI_OK) {
-        lua_pushstring(L, "ffi_prep_cif failed");
-        lua_error(L);
+        luaL_error(L, "ffi_prep_cif failed");
         return 0;
     }
 
@@ -238,9 +234,7 @@ int lua_hook_objc(lua_State* L) {
         hook,
         (void*)imp
     ) != FFI_OK) {
-        lua_pushstring(L, "ffi_prep_closure_loc failed");
-        lua_error(L);
-        abort();
+        luaL_error(L, "ffi_prep_closure_loc failed");
         return 0;
     }
 
