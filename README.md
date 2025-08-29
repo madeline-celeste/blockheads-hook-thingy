@@ -44,3 +44,6 @@ $ cowsay "god help you"
 - better readme coming Soon:TM:
 - you will find that i could not make up my mind on what i should name things lmao
 - this is very incomplete and unstable and incomplete and very unstable
+- the real main() function is throttled for 100 ms (defined by `MAIN_THROTTLE_MS`).
+    - this is intended to fix race conditions with lua hooking.
+    - i am not sure if there is a better solution. all suggestions and stuff are welcome!

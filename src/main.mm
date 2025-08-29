@@ -4,8 +4,10 @@
 #include <map>
 #include <string>
 #include <dlfcn.h>
+#include <chrono>
 
 #include <Foundation/Foundation.h>
+#include <thread>
 
 #import "cpp_hooks.h"
 #import "hook_util.h"
@@ -13,6 +15,12 @@
 #import "lua/lua_runner.h"
 
 std::map<std::string, IMP>* original_implementations;
+
+// _NOTE_
+// this is to give lua enough time to set up hooks before real_main() is called,
+// preventing race conditions from occuring within this timeframe.
+// fixes undefined behavior, but not sure if this is the best solution available. 
+#define MAIN_THROTTLE_MS 100
 
 BOOL isFoundationReady = NO;
 static std::once_flag init_flag;
@@ -81,6 +89,9 @@ static int my_main(int argc, char **argv, char **envp) {
     NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 
     runLua();
+
+    //
+    std::this_thread::sleep_for(std::chrono::milliseconds(MAIN_THROTTLE_MS));
 
     [pool drain];
 
