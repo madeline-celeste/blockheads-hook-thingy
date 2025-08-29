@@ -212,7 +212,9 @@ static int objcObject__index(lua_State* L) {
 
 static int objcObject__tostring(lua_State* L) {
     id obj = *(id*)luaL_checkudata(L, 1, "ObjCObject");
-    lua_pushstring(L, (std::string("ObjCObject<") + [[obj className] UTF8String] + ">").c_str());
+
+    NSString* fancyName = [NSString stringWithFormat:@"%s<%@>", "ObjCObject", [obj className]];
+    pushNSString(L, fancyName);
 
     return 1;
 }
