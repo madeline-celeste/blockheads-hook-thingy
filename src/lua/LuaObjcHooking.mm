@@ -30,6 +30,10 @@ ffi_type* ffiTypeForEncoding(const char* enc) {
         return &ffi_type_pointer;
     } else if (strcmp(enc, @encode(uint8_t)) == 0) {
         return &ffi_type_uint8; // unsigned uint8
+    } else if (strcmp(enc, @encode(unsigned short)) == 0) {
+        return &ffi_type_ushort;
+    } else if (strcmp(enc, @encode(signed short)) == 0) {
+        return &ffi_type_sshort;
     } else if (strcmp(enc, @encode(uint16_t)) == 0) {
         return &ffi_type_uint16; // unsigned uint16
     } else if (strcmp(enc, @encode(uint32_t)) == 0) {
@@ -50,6 +54,10 @@ ffi_type* ffiTypeForEncoding(const char* enc) {
         return &ffi_type_double;
     } else if (strcmp(enc, @encode(long double)) == 0) {
         return &ffi_type_longdouble;
+    } else if (strcmp(enc, @encode(unsigned char)) == 0) {
+        return &ffi_type_uchar;
+    } else if (strcmp(enc, @encode(signed char)) == 0) {
+        return &ffi_type_schar;
     }
 
     @throw [
