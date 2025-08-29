@@ -18,24 +18,45 @@
 extern std::map<std::string, IMP>* original_implementations;
 
 ffi_type* ffiTypeForEncoding(const char* enc) {
-    switch (*enc) {
-        case 'v': return &ffi_type_void;
-        case '@': return &ffi_type_pointer; // id (object)
-        case '#': return &ffi_type_pointer; // Class
-        case ':': return &ffi_type_pointer; // SEL
-        case 'i': return &ffi_type_sint32;
-        case 's': return &ffi_type_sint16;
-        case 'q': return &ffi_type_sint64;
-        case 'f': return &ffi_type_float;
-        case 'd': return &ffi_type_double;
-        case 'B': return &ffi_type_uint8;   // BOOL
-        case 'c': return &ffi_type_schar;   // char
-        case 'C': return &ffi_type_uchar;
-        case 'I': return &ffi_type_uint32;
-        case 'Q': return &ffi_type_uint64;
-        case '^': return &ffi_type_pointer; // pointer
-        default: {NSLog(@"%s", enc); std::abort();}; // fallback
+    if (strcmp(enc, @encode(void)) == 0) {
+        return &ffi_type_void;
+    } else if (strcmp(enc, @encode(id)) == 0) {
+        return &ffi_type_pointer;
+    } else if (strcmp(enc, @encode(Class)) == 0) {
+        return &ffi_type_pointer;
+    } else if (strcmp(enc, @encode(SEL)) == 0) {
+        return &ffi_type_pointer;
+    } else if (strcmp(enc, @encode(void*)) == 0) {
+        return &ffi_type_pointer;
+    } else if (strcmp(enc, @encode(uint8_t)) == 0) {
+        return &ffi_type_uint8; // unsigned uint8
+    } else if (strcmp(enc, @encode(uint16_t)) == 0) {
+        return &ffi_type_uint16; // unsigned uint16
+    } else if (strcmp(enc, @encode(uint32_t)) == 0) {
+        return &ffi_type_uint32; // unsigned uint32
+    } else if (strcmp(enc, @encode(uint64_t)) == 0) {
+        return &ffi_type_uint64; // unsigned uint64
+    } else if (strcmp(enc, @encode(int8_t)) == 0) {
+        return &ffi_type_sint8; // unsigned sint8
+    } else if (strcmp(enc, @encode(int16_t)) == 0) {
+        return &ffi_type_sint16; // unsigned sint16
+    } else if (strcmp(enc, @encode(int32_t)) == 0) {
+        return &ffi_type_sint32; // unsigned sint32
+    } else if (strcmp(enc, @encode(int64_t)) == 0) {
+        return &ffi_type_sint64; // unsigned sint64
+    } else if (strcmp(enc, @encode(float)) == 0) {
+        return &ffi_type_float;
+    } else if (strcmp(enc, @encode(double)) == 0) {
+        return &ffi_type_double;
+    } else if (strcmp(enc, @encode(long double)) == 0) {
+        return &ffi_type_longdouble;
     }
+
+    @throw [
+        NSException exceptionWithName:@"FFIEncodingFail"
+        reason:@"Unhandled encoding!"
+        userInfo:NULL
+    ];
 }
 
 struct LuaHook {
