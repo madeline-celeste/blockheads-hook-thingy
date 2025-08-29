@@ -20,14 +20,12 @@ $ make
 
 ### Linux
 
-running:
-
 ```sh
-LD_PRELOAD=./libhook.so ./blockheads_server171
+$ LD_PRELOAD=./libhook.so ./blockheads_server171
 ```
 example:
 ```sh
-LD_PRELOAD=./libhook.so ./blockheads_server171 --load [worldID]
+$ LD_PRELOAD=./libhook.so ./blockheads_server171 --load [worldID]
 ```
 
 ### MacOS
