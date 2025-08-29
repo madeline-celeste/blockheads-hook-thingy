@@ -1,0 +1,3 @@
+struct vec3 {
+
+};
