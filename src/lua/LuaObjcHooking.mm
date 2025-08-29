@@ -159,6 +159,9 @@ void objc_ffi_lua_invoke(ffi_cif *cif, void *ret, void **args, void *user_data) 
                 if (luaL_testudata(L, -1, "ObjCObject")) {
                     id obj = *(id*)luaL_testudata(L, -1, "ObjCObject");
                     *(void**)ret = obj;
+                } else if (luaL_testudata(L, -1, "ObjCSelector")) {
+                    SEL sel = *(SEL*)luaL_testudata(L, -1, "ObjCSelector");
+                    *(void**)ret = sel;
                 } else {
                     @throw [
                         NSException exceptionWithName:@"UnhandledUData"
