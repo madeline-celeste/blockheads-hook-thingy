@@ -12,19 +12,17 @@
 #import "macros/symbol_loader.hpp"
 #import "lua/lua_runner.h"
 
-extern "C" IMP objc_msg_lookup(id obj, SEL sel);
-DEFINE_OVERRIDE_SYM(objc_msg_lookup);
-
 std::map<std::string, IMP>* original_implementations;
 
 BOOL isFoundationReady = NO;
 static std::once_flag init_flag;
+extern "C" IMP objc_msg_lookup(id obj, SEL sel);
+DEFINE_OVERRIDE_SYM(objc_msg_lookup);
 
 void initSymbols() {
     LOAD_OVERRIDE_SYM(objc_msg_lookup);
     original_implementations = new std::map<std::string, IMP>();
 }
-
 
 #define LOG_ALL_NONINTERNAL_METHOD_CALLS false
 // we do not use Objective-C methods in here because they will make objc_msg_lookup very very mad and
