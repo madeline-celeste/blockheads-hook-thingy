@@ -36,6 +36,11 @@ static int my_main(int argc, char **argv, char **envp) {
 
     [pool drain];
 
+    // we will hijack this function that doesn't even do anything.
+    // it passes GameController, so it gives us a free reference to give to lua, which contains
+    // a ton of stuff that we can use from there.
+    //
+    // this is so incredibly convenient lmao
     HOOK_METHOD(CommandLineDelegate, loadCompleteForGameController:, hooked_loadCompleteForGameController);
     
     return real_main(argc, argv, envp);
