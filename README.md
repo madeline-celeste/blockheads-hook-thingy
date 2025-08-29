@@ -43,5 +43,4 @@ $ cowsay "god help you"
 
 - better readme coming Soon:TM:
 - you will find that i could not make up my mind on what i should name things lmao
-- stuff really starts in main_hook.mm, probably shouldnt in retrospect lmao
 - this is very incomplete and unstable and incomplete and very unstable
