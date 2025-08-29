@@ -1,7 +1,7 @@
 #include <lua.hpp>
 
 #import "ObjCSelector.h"
-#import "../ObjCLuaHelper.h"
+#import "../ObjCPushHelper.h"
 
 #import <Foundation/Foundation.h>
 

@@ -7,7 +7,7 @@
 #include <map>
 #include <string>
 
-#import "ObjCLuaHelper.h"
+#import "ObjCPushHelper.h"
 #import "classes/ObjCObject.h"
 
 #import <Foundation/Foundation.h>

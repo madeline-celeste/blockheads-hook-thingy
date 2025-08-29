@@ -6,7 +6,7 @@
 #include <lua.hpp>
 
 #import "GameController.h"
-#import "../ObjCLuaHelper.h"
+#import "../ObjCPushHelper.h"
 #import "../../../remake/include/GameController.h"
 
 #import <Foundation/Foundation.h>
@@ -18,7 +18,7 @@ int lua_GameController_getWorldName(lua_State* L) {
     id* udata = (id*)luaL_checkudata(L, 1, "GameController");
     GameController* gameController = *udata;
 
-    lua_pushstring(L, [[gameController worldName] UTF8String]);
+    pushNSString(L, [gameController worldName]);
     
     return 1;
 }

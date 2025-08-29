@@ -8,7 +8,7 @@
 #include <lua.hpp>
 
 #import "ObjCSelector.h"
-#import "../ObjCLuaHelper.h"
+#import "../ObjCPushHelper.h"
 
 #import <Foundation/Foundation.h>
 
@@ -63,10 +63,8 @@ static int objcObject_get(lua_State* L) {
         id returnValue = object_getIvar(obj, ivar);
         if (returnValue) {
             if ([returnValue isKindOfClass:[NSString class]]) {
-                //NSLog(@"pushing string %@", returnValue);
-                lua_pushstring(L, [returnValue UTF8String]);
+                pushNSString(L, returnValue);
             } else {
-                //NSLog(@"pushing class %@", returnValue);
                 pushObjCObject(L, returnValue);
             }
         } else {
@@ -144,7 +142,7 @@ static int objcObject_call(lua_State* L) {
         [invocation getReturnValue:&returnValue];
         if (returnValue) {
             if ([returnValue isKindOfClass:[NSString class]]) {
-                lua_pushstring(L, [returnValue UTF8String]);
+                pushNSString(L, returnValue);
                 //NSLog(@"pushing string %@", returnValue);
             } else if ([returnValue isKindOfClass:[NSArray class]]) {
                 pushNSArray(L, returnValue);
