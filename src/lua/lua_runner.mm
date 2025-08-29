@@ -13,6 +13,8 @@
 #import "classes/GameController.h"
 #import "classes/ObjCObject.h"
 
+#import "lib/ObjCDebug.h"
+
 #import <Foundation/Foundation.h>
 
 // this file is really really bad i feel and probably unstable
@@ -136,6 +138,11 @@ void _runLuaThread() {
     registerGameController(L);
     registerObjCObject(L);
     registerObjCSelector(L);
+
+    // libraries
+    registerObjCDebug(L);
+    pushObjCDebug(L);
+    lua_setglobal(L, "ObjCDebug");
 
     lua_register(L, "wait", lua_wait);
     lua_register(L, "hook_objc", lua_hook_objc);
