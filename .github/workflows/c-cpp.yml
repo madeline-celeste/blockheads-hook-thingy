@@ -30,9 +30,10 @@ jobs:
           # build and install libobjc2 (required for clang :c)
           git clone https://github.com/gnustep/libobjc2.git
           cd libobjc2
-          cmake -B build -S . -G Ninja
-          cmake --build build
-          sudo cmake --install build
+          cmake -B build -S . -G Ninja \
+            -DCMAKE_C_COMPILER=clang \
+            -DCMAKE_CXX_COMPILER=clang++
+            sudo cmake --install build
         fi
 
     # Configure CMake
