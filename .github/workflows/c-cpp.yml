@@ -33,7 +33,8 @@ jobs:
           cmake -B build -S . -G Ninja \
             -DCMAKE_C_COMPILER=clang \
             -DCMAKE_CXX_COMPILER=clang++
-            sudo cmake --install build
+          sudo cmake --build build
+          sudo cmake --install build
         fi
 
     # Configure CMake
