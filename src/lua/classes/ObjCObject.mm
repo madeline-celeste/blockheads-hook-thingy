@@ -97,7 +97,7 @@ static int objcObject_call(lua_State* L) {
     NSMethodSignature* sig = [NSMethodSignature signatureWithObjCTypes:encoding];
     NSUInteger numArgs = [sig numberOfArguments] - 2; // skip self&_cmd
 
-    NSUInteger numLuaArgs = lua_gettop(L) - 1;
+    NSUInteger numLuaArgs = lua_gettop(L);
     if (numLuaArgs != numArgs) {
         NSLog(@"Expected %lu args, got %lu", (unsigned long)numArgs, (unsigned long) numLuaArgs);
         luaL_error(L, "Expected %lu args, got %lu", (unsigned long)numArgs, (unsigned long) numLuaArgs);
@@ -110,25 +110,45 @@ static int objcObject_call(lua_State* L) {
     for (NSUInteger i = 0; i < numArgs; i++) {
         const char* argType = [sig getArgumentTypeAtIndex:(i + 2)];
 
+        // location in the lua stack
+        int lua_argLoc = i + 1;
+        // location of the argument in the objc func
+        int objc_argLoc = i + 2;
+
         if (strcmp(argType, @encode(id)) == 0) {
-            if (lua_isstring(L, i + 3)) {
-                NSString* str = [NSString stringWithUTF8String:lua_tostring(L, i + 3)];
-                [invocation setArgument:&str atIndex:(i + 2)];
-            } else if (lua_isuserdata(L, i + 3)) {
-                id arg = *(id*)luaL_checkudata(L, i + 3, "ObjCObject");
-                [invocation setArgument:&arg atIndex:(i + 2)];
+            if (lua_isstring(L, lua_argLoc)) {
+                NSString* str = [NSString stringWithUTF8String:lua_tostring(L, lua_argLoc)];
+                NSLog(@"BLAB%@", str);
+                [invocation setArgument:&str atIndex:objc_argLoc];
+            } else if (luaL_testudata(L, lua_argLoc, "ObjCObject")) {
+                id arg = *(id*)luaL_checkudata(L, lua_argLoc, "ObjCObject");
+                [invocation setArgument:&arg atIndex:objc_argLoc];
             } else {
+                NSLog(@"?? unhandled!!");
+                std::abort();
                 id nilObj = nil;
-                [invocation setArgument:&nilObj atIndex:(i + 2)];
+                [invocation setArgument:&nilObj atIndex:objc_argLoc];
             }
         } else if (strcmp(argType, @encode(int)) == 0) {
-            int val = (int)lua_tointeger(L, i + 3);
-            [invocation setArgument:&val atIndex:(i + 2)];
+            int val = (int)lua_tointeger(L, lua_argLoc);
+            [invocation setArgument:&val atIndex:objc_argLoc];
         } else if (strcmp(argType, @encode(double)) == 0) {
-            double val = lua_tonumber(L, i + 3);
-            [invocation setArgument:&val atIndex:(i + 2)];
+            double val = lua_tonumber(L, lua_argLoc);
+            [invocation setArgument:&val atIndex:objc_argLoc];
+        } else if (strcmp(argType, @encode(bool)) == 0) { // dont think this works with old runtime
+            double val = lua_toboolean(L, lua_argLoc);
+            [invocation setArgument:&val atIndex:objc_argLoc];
+        } else if (strcmp(argType, @encode(unsigned char)) == 0) {
+            if (lua_isboolean(L, lua_argLoc)) {
+                bool val = lua_toboolean(L, lua_argLoc);
+                [invocation setArgument:&val atIndex:objc_argLoc];
+            } else {
+                const char* val = lua_tostring(L, lua_argLoc);
+                unsigned char c = static_cast<unsigned char>(val[0]);
+                [invocation setArgument:&c atIndex:objc_argLoc];
+            }
         } else {
-            return luaL_error(L, "Unsupported arg type: %s", argType);
+            return luaL_error(L, "Unsupported arg type when invoking: %s", argType);
         }
     }
 
