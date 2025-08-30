@@ -111,7 +111,7 @@ static int objcObject_call(lua_State* L) {
         const char* argType = [sig getArgumentTypeAtIndex:(i + 2)];
 
         // location in the lua stack
-        int lua_argLoc = i + 1;
+        int lua_argLoc = i + 2;
         // location of the argument in the objc func
         int objc_argLoc = i + 2;
 
@@ -124,7 +124,7 @@ static int objcObject_call(lua_State* L) {
                 id arg = *(id*)luaL_checkudata(L, lua_argLoc, "ObjCObject");
                 [invocation setArgument:&arg atIndex:objc_argLoc];
             } else {
-                NSLog(@"?? unhandled!!");
+                NSLog(@"?? unhandled!! %s", lua_typename(L, lua_argLoc));
                 std::abort();
                 id nilObj = nil;
                 [invocation setArgument:&nilObj atIndex:objc_argLoc];
