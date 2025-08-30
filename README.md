@@ -51,3 +51,5 @@ $ cowsay "god help you"
 ## Issues
 
 - sometimes it will segfault. only sometimes. dont ask me why!!! (probably some sort of race condition with the horrendous lua_runner junk)
+- seems to be some undefined behavior causing stuff to be on the lua stack when they shouldnt be.
+(has caused wait() to think it has a function or something as an argument when it was supplied nothing)
