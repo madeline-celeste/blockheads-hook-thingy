@@ -21,7 +21,11 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt update
-        sudo apt install -y build-essential cmake liblua5.4-dev libffi-dev ninja-build libobjc-13-dev gobjc gobjc++ gnustep gnustep-devel libgnustep-base-dev
+        sudo apt install -y build-essential cmake liblua5.4-dev libffi-dev ninja-build libobjc-13-dev gnustep gnustep-devel libgnustep-base-dev
+
+        if [[ "${{ matrix.compiler}}" = "gcc" ]]; then
+          sudo apt install -y gobjc gobjc++
+        fi
 
         # Install clang if needed
         if [ "${{ matrix.compiler }}" = "clang" ]; then
@@ -56,8 +60,8 @@ jobs:
               -DCMAKE_CXX_COMPILER=/usr/bin/$CXX_COMPILER \
               -DCMAKE_OBJC_COMPILER=/usr/bin/$OBJC_COMPILER \
               -DCMAKE_OBJCXX_COMPILER=/usr/bin/$OBJCXX_COMPILER \
-              -DCMAKE_OBJC_FLAGS="$GNUMAKEFLAGS -I/usr/include/GNUstep -I/usr/include/objc/ -I/usr/include/" \
-              -DCMAKE_OBJCXX_FLAGS="$GNUMAKEFLAGS -I/usr/include/GNUstep -I/usr/include/objc/ -I/usr/include/" \
+              -DCMAKE_OBJC_FLAGS="$GNUMAKEFLAGS -I/usr/include/GNUstep -I/usr/include/objc/ -I/usr/include/ -I/usr/local/include/GNUstep/objc/" \
+              -DCMAKE_OBJCXX_FLAGS="$GNUMAKEFLAGS -I/usr/include/GNUstep -I/usr/include/objc/ -I/usr/include/ -I/usr/local/include/GNUstep/objc/" \
               -DCMAKE_EXE_LINKER_FLAGS="-L$GNUSTEP_SYSTEM_ROOT/lib -L/usr/lib/GNUstep"
 
 
