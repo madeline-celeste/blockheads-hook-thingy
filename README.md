@@ -10,10 +10,34 @@ note: i know very little about objc fyi so this might suck lol
 - luck
 
 ## Building
-
+must have `cmake` installed. then just need to run:
 ```sh
-$ cmake .
-$ make
+$ cmake -B build -S .
+$ cmake --build build
+```
+can also add `-G Ninja` if you want it to use ninja when building. is a lot faster but not really necessary.
+```sh
+$ cmake -B build -S . -G Ninja
+$ cmake --build build
+```
+or if you want a specific compiler:
+#### gcc/gcc++
+```sh
+$ cmake -B build_gcc -S . \
+  -DCMAKE_C_COMPILER=gcc \
+  -DCMAKE_CXX_COMPILER=g++ \
+  -DCMAKE_OBJC_COMPILER=gcc \
+  -DCMAKE_OBJCXX_COMPILER=g++
+$ cmake --build build_gcc
+```
+#### clang/clang++
+```sh
+$ cmake -B build_clang -S . \
+  -DCMAKE_C_COMPILER=clang \
+  -DCMAKE_CXX_COMPILER=clang++ \
+  -DCMAKE_OBJC_COMPILER=clang \
+  -DCMAKE_OBJCXX_COMPILER=clang++
+$ cmake --build build_clang
 ```
 
 ## Running
