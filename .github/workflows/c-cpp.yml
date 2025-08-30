@@ -1,0 +1,41 @@
+name: Test build
+
+on:
+  push:
+    branches: [ "mistress" ]
+  pull_request:
+    branches: [ "mistress" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        compiler: [gcc, clang]  # Test both compilers
+
+    steps:
+    - uses: actions/checkout@v3
+
+    # Install dependencies
+    - name: Install dependencies
+      run: |
+        sudo apt update
+        sudo apt install -y build-essential cmake lua5.4 libffi-dev ninja-build libobjc-8-dev
+
+        # Install clang if needed
+        if [ "${{ matrix.compiler }}" = "clang" ]; then
+          sudo apt install -y clang
+        fi
+
+    # Configure CMake
+    - name: Configure CMake
+      run: cmake -B build_${{ matrix.compiler }} -S . -G Ninja \
+            -DCMAKE_C_COMPILER=${{ matrix.compiler }} \
+            -DCMAKE_CXX_COMPILER=${{ matrix.compiler }}++ \
+            -DCMAKE_OBJC_COMPILER=${{ matrix.compiler }} \
+            -DCMAKE_OBJCXX_COMPILER=${{ matrix.compiler }}
+
+    # Build the project
+    - name: Build
+      run: cmake --build build_${{ matrix.compiler }}
