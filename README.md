@@ -47,3 +47,7 @@ $ cowsay "god help you"
 - the real main() function is throttled for 100 ms (defined by `MAIN_THROTTLE_MS`).
     - this is intended to fix race conditions with lua hooking.
     - i am not sure if there is a better solution. all suggestions and stuff are welcome!
+
+## Issues
+
+- sometimes it will segfault. only sometimes. dont ask me why!!! (probably some sort of race condition with the horrendous lua_runner junk)
