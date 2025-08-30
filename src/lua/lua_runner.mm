@@ -13,6 +13,8 @@
 #import "classes/GameController.h"
 #import "classes/ObjCObject.h"
 
+#import "ObjCPushHelper.h"
+
 #import "lib/ObjCDebug.h"
 
 #import <Foundation/Foundation.h>
@@ -147,6 +149,7 @@ void _runLuaThread() {
     lua_register(L, "wait", lua_wait);
     lua_register(L, "hook_objc", lua_hook_objc);
     lua_register(L, "abort", lua_abort);
+    lua_register(L, "stringToNSArrayObjCObject", pushLuaTableToNSArrayObjCObject);
     
     if (luaL_loadfile(L, "lua/main.lua") != LUA_OK) {
         const char* err = lua_tostring(L, -1);
