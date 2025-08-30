@@ -37,10 +37,9 @@ jobs:
               -DCMAKE_CXX_COMPILER=/usr/bin/${{ matrix.compiler }}++ \
               -DCMAKE_OBJC_COMPILER=/usr/bin/${{ matrix.compiler }} \
               -DCMAKE_OBJCXX_COMPILER=/usr/bin/${{ matrix.compiler }} \
-              -DCMAKE_OBJC_FLAGS="$GNUMAKEFLAGS -I/usr/include/GNUstep" \
-              -DCMAKE_OBJCXX_FLAGS="$GNUMAKEFLAGS -I/usr/include/GNUstep" \
-              -DCMAKE_EXE_LINKER_FLAGS="-L$GNUSTEP_SYSTEM_ROOT/lib" \
-              -DCMAKE_EXE_LINKER_FLAGS="-L/usr/lib/GNUstep"
+              -DCMAKE_OBJC_FLAGS="$GNUMAKEFLAGS -I/usr/include/GNUstep -I/usr/include" \
+              -DCMAKE_OBJCXX_FLAGS="$GNUMAKEFLAGS -I/usr/include/GNUstep -I/usr/include" \
+              -DCMAKE_EXE_LINKER_FLAGS="-L$GNUSTEP_SYSTEM_ROOT/lib -L/usr/lib/GNUstep"
 
 
 
