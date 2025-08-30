@@ -56,7 +56,7 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    target_include_directories(hook PRIVATE ${LIBOBJC2_INCLUDE_DIR})
+    target_include_directories(hook BEFORE PRIVATE ${LIBOBJC2_INCLUDE_DIR})
 endif()
 
 
