@@ -21,7 +21,7 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt update
-        sudo apt install -y build-essential cmake lua5.4-dev libffi-dev ninja-build libobjc-13-dev gobjc gobjc++ 
+        sudo apt install -y build-essential cmake liblua5.4-dev libffi-dev ninja-build libobjc-13-dev gobjc gobjc++ 
 
         # Install clang if needed
         if [ "${{ matrix.compiler }}" = "clang" ]; then
