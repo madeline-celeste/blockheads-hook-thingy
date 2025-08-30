@@ -73,7 +73,7 @@ jobs:
         source /usr/share/GNUstep/Makefiles/GNUstep.sh
         cmake --build build_${{ matrix.compiler }}
     - name: Upload full build directory
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: build-${{ matrix.compiler }}
         path: build_${{ matrix.compiler }}/
