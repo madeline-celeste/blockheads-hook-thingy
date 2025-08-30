@@ -50,6 +50,7 @@ static int ObjCDebug_getClassHierarchy(lua_State* L) {
         cls = class_getSuperclass(cls);
         class_count++;
     }
+    free(cls);
 
     return 1;
 }
@@ -64,6 +65,7 @@ static int ObjCDebug_getClassList(lua_State* L) {
         lua_pushstring(L, class_getName(classes[i]));
         lua_settable(L, -3);
     }
+    free(classes);
 
     return 1;
 }
@@ -103,7 +105,6 @@ static int ObjCDebug_getPropertiesForClass(lua_State* L) {
 
         lua_settable(L, -3); // sets and pops outer table
     }
-
     free(props);
 
     return 1;
