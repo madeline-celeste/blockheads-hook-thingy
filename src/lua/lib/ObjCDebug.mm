@@ -3,25 +3,38 @@
 #include <objc/objc.h>
 #import <Foundation/Foundation.h>
 
-// TODO: make fully lua interactable i think thatm akes sense
-static int DumpIvarsForClass(lua_State* L) {
+static int ObjCDebug_getIvarsForClass(lua_State* L) {
     const char* class_name = luaL_checkstring(L, 1);
     Class cls = objc_getClass(class_name);
 
-    unsigned count = 0;
-    Ivar *ivars = class_copyIvarList(cls, &count);
-    NSLog(@"Ivars for %@:", cls);
-    for (unsigned i = 0; i < count; i++) {
+    unsigned int count = 0;
+    Ivar* ivars = class_copyIvarList(cls, &count);
+
+    lua_createtable(L, count, 0);
+
+    for (unsigned int i = 0; i < count; i++) {
         Ivar iv = ivars[i];
-        const char *name = ivar_getName(iv);
-        const char *type = ivar_getTypeEncoding(iv);
-        ptrdiff_t off = ivar_getOffset(iv);
-        NSLog(@"  %3u: %-30s off=0x%tx type=%s", i, name ? name : "(null)", off, type ? type : "?");
+        
+        lua_pushnumber(L, static_cast<lua_Integer>(i));
+        lua_createtable(L, 0, 2);
+        {
+            lua_pushstring(L, ivar_getName(iv));
+            lua_setfield(L, -2, "name");
+
+            lua_pushstring(L, ivar_getTypeEncoding(iv));
+            lua_setfield(L, -2, "encoding");
+
+            // TODO: might be not preferable
+            lua_pushinteger(L, static_cast<lua_Integer>(ivar_getOffset(iv)));
+            lua_setfield(L, -2, "offset");
+        }
+        lua_settable(L, -3);
     }
     free(ivars);
 
-    return 0;
+    return 1;
 }
+
 static int ObjCDebug_getClassHierarchy(lua_State* L) {
     const char* class_name = luaL_checkstring(L, 1);
     Class cls = objc_getClass(class_name);
@@ -109,8 +122,8 @@ void registerObjCDebug(lua_State*L) {
 
     lua_pushcfunction(L, ObjCDebug_getClassHierarchy);
     lua_setfield(L, -2, "getClassHierarchy");
-    lua_pushcfunction(L, DumpIvarsForClass);
-    lua_setfield(L, -2, "DumpIvarsForClass");
+    lua_pushcfunction(L, ObjCDebug_getIvarsForClass);
+    lua_setfield(L, -2, "getIvarsForClass");
     lua_pushcfunction(L, ObjCDebug_getClassList);
     lua_setfield(L, -2, "getClassList");
     lua_pushcfunction(L, ObjCDebug_getPropertiesForClass);
