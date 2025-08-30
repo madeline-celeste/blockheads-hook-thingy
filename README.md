@@ -6,8 +6,17 @@ note: i know very little about objc fyi so this might suck lol
 - libffi
 - lua 5.4
 - cmake
+- libgnustep
+- gcc-objc (if using gcc)
 - probably something else
 - luck
+### On Arch Linux
+```sh
+# if using gcc:
+$ pacman -Syu cmake gcc --asdeps gnustep-base gcc-objc
+# if using clang:
+$ pacman -Syu cmake clang --asdeps gnustep-base
+```
 
 ## Building
 must have `cmake` installed. then just need to run:
