@@ -79,9 +79,9 @@ static int objcObject_get(lua_State* L) {
 
 
 static int objcObject_call(lua_State* L) {
-    id obj = *(id*)luaL_checkudata(L, lua_upvalueindex(1), "ObjCObject");
+    id obj = *(id*)luaL_checkudata(L, 1, "ObjCObject");
     //NSLog(@"your taking too long");
-    SEL sel = *(SEL*)luaL_checkudata(L, lua_upvalueindex(2), "ObjCSelector");
+    SEL sel = *(SEL*)luaL_checkudata(L, lua_upvalueindex(1), "ObjCSelector");
 
     //NSLog(@"we have the meats");
 
@@ -98,9 +98,11 @@ static int objcObject_call(lua_State* L) {
     NSUInteger numArgs = [sig numberOfArguments] - 2; // skip self&_cmd
 
     NSUInteger numLuaArgs = lua_gettop(L);
-    if (numLuaArgs != numArgs) {
-        NSLog(@"Expected %lu args, got %lu", (unsigned long)numArgs, (unsigned long) numLuaArgs);
-        luaL_error(L, "Expected %lu args, got %lu", (unsigned long)numArgs, (unsigned long) numLuaArgs);
+    NSLog(@"%lu, %lu", numArgs, numLuaArgs);
+    if (numLuaArgs != numArgs + 1) {
+        return luaL_error(L, "Expected %d args, got %d",
+        (unsigned long)numArgs + 1,
+        (unsigned long)numLuaArgs);
     }
 
     NSInvocation* invocation = [NSInvocation invocationWithMethodSignature:sig];
@@ -212,9 +214,9 @@ static int objcObject__index(lua_State* L) {
     // no way to call our function if it is done this way.
     // not really having a better idea though
     if ([obj respondsToSelector:sel]) {
-        pushObjCObject(L, obj);
+        //pushObjCObject(L, obj);
         pushObjCSelector(L, sel);
-        lua_pushcclosure(L, objcObject_call, 2);
+        lua_pushcclosure(L, objcObject_call, 1);
         return 1;
     }
 
