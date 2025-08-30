@@ -6,6 +6,26 @@ message(STATUS "C++ compiler: ${CMAKE_CXX_COMPILER}")
 message(STATUS "ObjC compiler: ${CMAKE_OBJC_COMPILER}")
 message(STATUS "ObjC++ compiler: ${CMAKE_OBJCXX_COMPILER}")
 
+if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    include(ExternalProject)
+
+    ExternalProject_Add(libobjc2
+	GIT_REPOSITORY https://github.com/gnustep/libobjc2.git
+        GIT_TAG master
+        PREFIX ${CMAKE_BINARY_DIR}/libobjc2
+        CMAKE_ARGS
+	    -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/libobjc2/install
+	    -DCMAKE_C_COMPILER=clang
+	    -DCMAKE_CXX_COMPILER=clang++
+	    -DCMAKE_OBJC_COMPILER=clang
+	    -DCMAKE_OBJCXX_COMPILER=clang++
+	USES_TERMINAL_CONFIGURE TRUE
+	USES_TERMINAL_BUILD TRUE
+    )
+    set(LIBOBJC2_INCLUDE_DIR ${CMAKE_BINARY_DIR}/libobjc2/install/include)
+    set(LIBOBJC2_LIBRARY_DIR ${CMAKE_BINARY_DIR}/libobjc2/install/lib)
+endif()
+
 # Grab all source files in src/
 file(GLOB_RECURSE SRC_FILES CONFIGURE_DEPENDS src/*.mm src/*.m src/*.cpp src/*.c)
 
@@ -33,6 +53,10 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "Clang|AppleClang")
     target_compile_options(hook PRIVATE -fno-objc-arc)
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     target_compile_options(hook PRIVATE -fobjc-exceptions) # required for @throw
+endif()
+
+if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    target_include_directories(hook PRIVATE ${LIBOBJC2_INCLUDE_DIR})
 endif()
 
 
