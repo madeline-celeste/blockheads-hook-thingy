@@ -32,11 +32,21 @@ jobs:
     - name: Configure CMake
       run: |
         source /usr/share/GNUstep/Makefiles/GNUstep.sh
+        if [[ "${{ matrix.compiler }}" == "gcc" ]]; then
+          CXX_COMPILER="g++"
+          OBJC_COMPILER="gcc"
+          OBJCXX_COMPILER="g++"
+        else
+          CXX_COMPILER="clang++"
+          OBJC_COMPILER="clang"
+          OBJCXX_COMPILER="clang++"
+        fi
+        
         cmake -B build_${{ matrix.compiler }} -S . -G Ninja \
               -DCMAKE_C_COMPILER=/usr/bin/${{ matrix.compiler }} \
-              -DCMAKE_CXX_COMPILER=/usr/bin/${{ matrix.compiler }}++ \
-              -DCMAKE_OBJC_COMPILER=/usr/bin/${{ matrix.compiler }} \
-              -DCMAKE_OBJCXX_COMPILER=/usr/bin/${{ matrix.compiler }} \
+              -DCMAKE_CXX_COMPILER=/usr/bin/$CXX_COMPILER \
+              -DCMAKE_OBJC_COMPILER=/usr/bin/$OBJC_COMPILER \
+              -DCMAKE_OBJCXX_COMPILER=/usr/bin/$OBJCXX_COMPILER \
               -DCMAKE_OBJC_FLAGS="$GNUMAKEFLAGS -I/usr/include/GNUstep -I/usr/include/objc/" \
               -DCMAKE_OBJCXX_FLAGS="$GNUMAKEFLAGS -I/usr/include/GNUstep -I/usr/include/objc/" \
               -DCMAKE_EXE_LINKER_FLAGS="-L$GNUSTEP_SYSTEM_ROOT/lib -L/usr/lib/GNUstep"
