@@ -62,8 +62,7 @@ static int ObjCDebug_getPropertiesForClass(lua_State* L) {
     Class cls = objc_getClass(class_name);
 
     if (!cls) {
-        luaL_error(L, "Class '%s' not found", class_name);
-        return 2;
+        return luaL_error(L, "Class '%s' not found", class_name);
     }
 
     unsigned int property_count = 0;

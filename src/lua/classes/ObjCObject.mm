@@ -51,8 +51,7 @@ static int objcObject_get(lua_State* L) {
 
     Ivar ivar = class_getInstanceVariable(cls, varName);
     if (!ivar) {
-        luaL_error(L, "No such variable: %s", varName);
-        return 0;
+        return luaL_error(L, "No such variable: %s", varName);
     }
 
     const char* encoding = ivar_getTypeEncoding(ivar);
@@ -88,8 +87,7 @@ static int objcObject_call(lua_State* L) {
     Method meth = class_getInstanceMethod([obj class], sel); // segfaults
     if (!meth) {
         NSLog(@"NO FUCKING METHOD WHY");
-        luaL_error(L, "No such method: %s", sel_getName(sel));
-        return 0;
+        return luaL_error(L, "No such method: %s", sel_getName(sel));
     }
     //NSLog(@"Good. Keep smiling.");
 
