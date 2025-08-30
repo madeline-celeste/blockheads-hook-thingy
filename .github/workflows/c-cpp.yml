@@ -22,7 +22,6 @@ jobs:
       run: |
         sudo apt update
         sudo apt install -y build-essential cmake liblua5.4-dev libffi-dev ninja-build libobjc-13-dev gobjc gobjc++ gnustep gnustep-devel libgnustep-base-dev
-        source /usr/share/GNUstep/Makefiles/GNUstep.sh
 
         # Install clang if needed
         if [ "${{ matrix.compiler }}" = "clang" ]; then
@@ -39,4 +38,6 @@ jobs:
 
     # Build the project
     - name: Build
-      run: cmake --build build_${{ matrix.compiler }}
+      run: |
+        source /usr/share/GNUstep/Makefiles/GNUstep.sh
+        cmake --build build_${{ matrix.compiler }}
