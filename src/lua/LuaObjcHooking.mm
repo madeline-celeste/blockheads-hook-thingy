@@ -77,7 +77,6 @@ struct LuaHook {
     ffi_type* return_type;
     IMP previous_implementation;
 };
-static std::map<std::string, LuaHook> lua_hooks;
 
 /*
 trampoline thing i think. like it boings into lua or something i think thats why they called trampoline
