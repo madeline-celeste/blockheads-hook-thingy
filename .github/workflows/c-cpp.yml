@@ -33,10 +33,10 @@ jobs:
       run: |
         source /usr/share/GNUstep/Makefiles/GNUstep.sh
         cmake -B build_${{ matrix.compiler }} -S . -G Ninja \
-              -DCMAKE_C_COMPILER=${{ matrix.compiler }} \
-              -DCMAKE_CXX_COMPILER=${{ matrix.compiler }}++ \
-              -DCMAKE_OBJC_COMPILER=${{ matrix.compiler }} \
-              -DCMAKE_OBJCXX_COMPILER=${{ matrix.compiler }} \
+              -DCMAKE_C_COMPILER=/usr/bin/${{ matrix.compiler }} \
+              -DCMAKE_CXX_COMPILER=/usr/bin/${{ matrix.compiler }}++ \
+              -DCMAKE_OBJC_COMPILER=/usr/bin/${{ matrix.compiler }} \
+              -DCMAKE_OBJCXX_COMPILER=/usr/bin/${{ matrix.compiler }} \
               -DCMAKE_OBJC_FLAGS="-I/usr/include/GNUstep" \
               -DCMAKE_OBJCXX_FLAGS="-I/usr/include/GNUstep" \
               -DCMAKE_EXE_LINKER_FLAGS="-L/usr/lib/GNUstep"
