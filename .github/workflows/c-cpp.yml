@@ -39,7 +39,11 @@ jobs:
               -DCMAKE_OBJCXX_COMPILER=/usr/bin/${{ matrix.compiler }} \
               -DCMAKE_OBJC_FLAGS="$GNUMAKEFLAGS" \
               -DCMAKE_OBJCXX_FLAGS="$GNUMAKEFLAGS" \
-              -DCMAKE_EXE_LINKER_FLAGS="-L$GNUSTEP_SYSTEM_ROOT/lib"
+              -DCMAKE_EXE_LINKER_FLAGS="-L$GNUSTEP_SYSTEM_ROOT/lib" \
+              -DCMAKE_OBJC_FLAGS="-I/usr/include/GNUstep" \
+              -DCMAKE_OBJCXX_FLAGS="-I/usr/include/GNUstep" \
+              -DCMAKE_EXE_LINKER_FLAGS="-L/usr/lib/GNUstep"
+
 
 
 
