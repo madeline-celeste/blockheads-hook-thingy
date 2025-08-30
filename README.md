@@ -20,6 +20,7 @@ $ make
 
 ### Linux
 
+launch the server with the library loaded. the easiest (and non-permanent) way to do this is to use `LD_PRELOAD`.
 ```sh
 $ LD_PRELOAD=./libhook.so ./blockheads_server171
 ```
