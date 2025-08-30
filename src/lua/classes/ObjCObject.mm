@@ -235,7 +235,7 @@ static int objcObject__index(lua_State* L) {
 static int objcObject__tostring(lua_State* L) {
     id obj = *(id*)luaL_checkudata(L, 1, "ObjCObject");
 
-    NSString* fancyName = [NSString stringWithFormat:@"%s<%@>", "ObjCObject", [obj className]];
+    NSString* fancyName = [NSString stringWithFormat:@"ObjCObject(%@)", [obj description]];
     pushNSString(L, fancyName);
 
     return 1;
