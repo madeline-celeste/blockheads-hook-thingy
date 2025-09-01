@@ -8,7 +8,9 @@ on:
 
 jobs:
   build:
-    runs-on: debian:bookworm-slim
+    runs-on: ubuntu-latest
+    container:
+      image: debian:bookworm-slim
 
     strategy:
       matrix:
