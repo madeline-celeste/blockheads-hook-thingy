@@ -22,16 +22,16 @@ jobs:
     # Install dependencies
     - name: Install dependencies
       run: |
-        sudo apt update
-        sudo apt install -y build-essential cmake liblua5.4-dev libffi-dev ninja-build libobjc-13-dev gnustep gnustep-devel libgnustep-base-dev
+        apt update
+        apt install -y build-essential cmake liblua5.4-dev libffi-dev ninja-build libobjc-13-dev gnustep gnustep-devel libgnustep-base-dev
 
         if [[ "${{ matrix.compiler}}" = "gcc" ]]; then
-          sudo apt install -y gobjc gobjc++
+          apt install -y gobjc gobjc++
         fi
 
         # Install clang if needed
         if [ "${{ matrix.compiler }}" = "clang" ]; then
-          sudo apt install -y clang
+          apt install -y clang
         fi
 
     # Configure CMake
