@@ -41,7 +41,7 @@ jobs:
         if [[ "${{ matrix.compiler }}" == "gcc" ]]; then
           CXX_COMPILER="g++"
           OBJC_COMPILER="gcc"
-          OBJCXX_COMPILER="gobjc++"
+          OBJCXX_COMPILER="g++"
         else
           CXX_COMPILER="clang++"
           OBJC_COMPILER="clang"
