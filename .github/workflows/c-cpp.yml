@@ -37,7 +37,7 @@ jobs:
     # Configure CMake
     - name: Configure CMake
       run: |
-        source /usr/share/GNUstep/Makefiles/GNUstep.sh
+        ./usr/share/GNUstep/Makefiles/GNUstep.sh
         if [[ "${{ matrix.compiler }}" == "gcc" ]]; then
           CXX_COMPILER="g++"
           OBJC_COMPILER="gcc"
@@ -60,7 +60,7 @@ jobs:
     # Build the project
     - name: Build
       run: |
-        source /usr/share/GNUstep/Makefiles/GNUstep.sh
+        ./usr/share/GNUstep/Makefiles/GNUstep.sh
         cmake --build build_${{ matrix.compiler }}
     - name: Upload full build directory
       uses: actions/upload-artifact@v4
