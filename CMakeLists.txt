@@ -19,8 +19,6 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 	    -DCMAKE_CXX_COMPILER=clang++
 	    -DCMAKE_OBJC_COMPILER=clang
 	    -DCMAKE_OBJCXX_COMPILER=clang++
-	    -DGNUSTEP_INSTALL_TYPE=LOCAL
-	INSTALL_COMMAND ""
 	USES_TERMINAL_CONFIGURE TRUE
 	USES_TERMINAL_BUILD TRUE
     )
@@ -60,6 +58,7 @@ endif()
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     add_dependencies(hook libobjc2)
     target_include_directories(hook BEFORE PRIVATE ${LIBOBJC2_INCLUDE_DIR})
+    target_include_directories(hook BEFORE PRIVATE ${LIBOBJC2_INCLUDE_DIR}/objc/)
 endif()
 
 
