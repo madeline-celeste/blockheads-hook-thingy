@@ -53,10 +53,8 @@ jobs:
               -DCMAKE_OBJCXX_COMPILER=/usr/bin/$OBJCXX_COMPILER \
               -DCMAKE_OBJC_FLAGS="$GNUMAKEFLAGS -I/usr/include/GNUstep -I/usr/include/objc/ -I/usr/include/ -I/usr/local/include/GNUstep/objc/ -I/usr/local/include/ -I/usr/local/include/GNUstep" \
               -DCMAKE_OBJCXX_FLAGS="$GNUMAKEFLAGS -I/usr/include/GNUstep -I/usr/include/objc/ -I/usr/include/ -I/usr/local/include/GNUstep/objc/ -I/usr/local/include/ -I/usr/local/include/GNUstep/" \
-              -DCMAKE_EXE_LINKER_FLAGS="-L$GNUSTEP_SYSTEM_ROOT/lib -L/usr/lib/GNUstep"
-
-
-
+              -DCMAKE_EXE_LINKER_FLAGS="-L$GNUSTEP_SYSTEM_ROOT/lib -L/usr/lib/GNUstep" \
+              -DGNUSTEP_INSTALL_TYPE=LOCAL
 
     # Build the project
     - name: Build
