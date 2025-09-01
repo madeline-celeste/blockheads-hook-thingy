@@ -5,6 +5,7 @@ message(STATUS "C compiler:   ${CMAKE_C_COMPILER}")
 message(STATUS "C++ compiler: ${CMAKE_CXX_COMPILER}")
 message(STATUS "ObjC compiler: ${CMAKE_OBJC_COMPILER}")
 message(STATUS "ObjC++ compiler: ${CMAKE_OBJCXX_COMPILER}")
+message(STATUS "CMake binary dir: ${CMAKE_BINARY_DIR}")
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     include(ExternalProject)
