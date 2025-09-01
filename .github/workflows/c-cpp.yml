@@ -37,7 +37,7 @@ jobs:
     # Configure CMake
     - name: Configure CMake
       run: |
-        . /usr/share/GNUstep/Makefiles/GNUstep.sh
+        source  /usr/share/GNUstep/Makefiles/GNUstep.sh
         if [[ "${{ matrix.compiler }}" == "gcc" ]]; then
           CXX_COMPILER="g++"
           OBJC_COMPILER="gcc"
@@ -56,12 +56,14 @@ jobs:
               -DCMAKE_OBJC_FLAGS="$GNUMAKEFLAGS -I/usr/include/GNUstep -I/usr/include/objc/ -I/usr/include/ -I/usr/local/include/GNUstep/objc/ -I/usr/local/include/ -I/usr/local/include/GNUstep" \
               -DCMAKE_OBJCXX_FLAGS="$GNUMAKEFLAGS -I/usr/include/GNUstep -I/usr/include/objc/ -I/usr/include/ -I/usr/local/include/GNUstep/objc/ -I/usr/local/include/ -I/usr/local/include/GNUstep/" \
               -DCMAKE_EXE_LINKER_FLAGS="-L$GNUSTEP_SYSTEM_ROOT/lib -L/usr/lib/GNUstep"
+      shell: bash
 
     # Build the project
     - name: Build
       run: |
-        . /usr/share/GNUstep/Makefiles/GNUstep.sh
+        source /usr/share/GNUstep/Makefiles/GNUstep.sh
         cmake --build build_${{ matrix.compiler }}
+      shell: bash
     - name: Upload full build directory
       uses: actions/upload-artifact@v4
       with:
