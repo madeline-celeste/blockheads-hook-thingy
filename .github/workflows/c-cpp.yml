@@ -25,7 +25,7 @@ jobs:
         apt update
         apt install -y build-essential cmake liblua5.4-dev libffi-dev ninja-build gnustep gnustep-devel libgnustep-base-dev
 
-        if [[ "${{ matrix.compiler}}" = "gcc" ]]; then
+        if [[ "${{ matrix.compiler }}" = "gcc" ]]; then
           apt install -y gobjc gobjc++
         fi
 
@@ -41,7 +41,7 @@ jobs:
         if [[ "${{ matrix.compiler }}" == "gcc" ]]; then
           CXX_COMPILER="g++"
           OBJC_COMPILER="gcc"
-          OBJCXX_COMPILER="g++"
+          OBJCXX_COMPILER="gobjc++"
         else
           CXX_COMPILER="clang++"
           OBJC_COMPILER="clang"
