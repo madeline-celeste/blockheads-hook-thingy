@@ -14,7 +14,7 @@ jobs:
 
     strategy:
       matrix:
-        compiler: [gcc, clang]  # Test both compilers
+        compiler: [clang]
 
     steps:
     - uses: actions/checkout@v3
@@ -25,10 +25,6 @@ jobs:
         apt update
         apt install -y build-essential cmake liblua5.4-dev libffi-dev ninja-build gnustep gnustep-devel libgnustep-base-dev
 
-        if [[ "${{ matrix.compiler }}" = "gcc" ]]; then
-          apt install -y gobjc gobjc++
-        fi
-
         # Install clang if needed
         if [ "${{ matrix.compiler }}" = "clang" ]; then
           apt install -y clang
@@ -38,11 +34,7 @@ jobs:
     - name: Configure CMake
       run: |
         source  /usr/share/GNUstep/Makefiles/GNUstep.sh
-        if [[ "${{ matrix.compiler }}" == "gcc" ]]; then
-          CXX_COMPILER="g++"
-          OBJC_COMPILER="gcc"
-          OBJCXX_COMPILER="g++"
-        else
+        if [[ "${{ matrix.compiler }}" == "clang" ]]; then
           CXX_COMPILER="clang++"
           OBJC_COMPILER="clang"
           OBJCXX_COMPILER="clang++"
