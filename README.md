@@ -7,13 +7,10 @@ note: i know very little about objc fyi so this might suck lol
 - lua 5.4
 - cmake
 - libgnustep
-- gcc-objc (if using gcc)
 - probably something else
 - luck
 ### On Arch Linux
 ```sh
-# if using gcc:
-$ pacman -Syu cmake gcc --asdeps gnustep-base gcc-objc
 # if using clang:
 $ pacman -Syu cmake clang --asdeps gnustep-base
 ```
@@ -28,25 +25,6 @@ can also add `-G Ninja` if you want it to use ninja when building. is a lot fast
 ```sh
 $ cmake -B build -S . -G Ninja
 $ cmake --build build
-```
-or if you want a specific compiler:
-#### gcc/gcc++
-```sh
-$ cmake -B build_gcc -S . \
-  -DCMAKE_C_COMPILER=gcc \
-  -DCMAKE_CXX_COMPILER=g++ \
-  -DCMAKE_OBJC_COMPILER=gcc \
-  -DCMAKE_OBJCXX_COMPILER=g++
-$ cmake --build build_gcc
-```
-#### clang/clang++
-```sh
-$ cmake -B build_clang -S . \
-  -DCMAKE_C_COMPILER=clang \
-  -DCMAKE_CXX_COMPILER=clang++ \
-  -DCMAKE_OBJC_COMPILER=clang \
-  -DCMAKE_OBJCXX_COMPILER=clang++
-$ cmake --build build_clang
 ```
 
 ## Running
